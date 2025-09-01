@@ -1,5 +1,6 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import express from 'express';
+import cors from 'cors';
 import { appRouter } from './trpc/router';
 import { createContext } from './trpc/trpc';
 
@@ -7,6 +8,11 @@ const PORT = 8000 as const;
 
 async function main() {
   const app = express();
+
+  app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }));
 
   app.use(
     '/trpc',
