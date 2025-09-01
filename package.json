@@ -1,0 +1,14 @@
+{
+  "name": "messaging-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"pnpm dev:backend\" \"pnpm dev:frontend\"",
+    "dev:backend": "cd backend && pnpm dev",
+    "dev:frontend": "cd frontend && pnpm dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
