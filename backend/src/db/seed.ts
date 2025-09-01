@@ -1,9 +1,7 @@
 import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/node-postgres';
 import { usersTable } from './schema';
+import { db } from '.';
   
-const db = drizzle(process.env.DATABASE_URL!);
-
 type User = typeof usersTable.$inferInsert;
 
 const users: User[] = [
