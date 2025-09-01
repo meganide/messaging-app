@@ -6,7 +6,7 @@ import { createContext } from './trpc/trpc';
 
 const PORT = 8000 as const;
 
-async function main() {
+function startServer() {
   const app = express();
 
   app.use(cors({
@@ -28,4 +28,4 @@ async function main() {
   });
 }
 
-void main();
+startServer();
