@@ -1,6 +1,6 @@
 # Messaging App
 
-Full-stack messaging application with Next.js, tRPC, Drizzle ORM, and PostgreSQL.
+Full-stack messaging application with Next.js, Node.js, tRPC, Drizzle ORM, and PostgreSQL.
 
 ## Prerequisites
 
@@ -22,9 +22,9 @@ cd ../frontend && pnpm install && cd ..
 docker compose up -d
 ```
 3. **Setup database**
-   ```bash
-   cd backend && npx drizzle-kit push
-   ```
+```bash
+cd backend && npx drizzle-kit push
+```
 
 4. **Seed Database**
 ```bash
