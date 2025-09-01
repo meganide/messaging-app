@@ -1,0 +1,19 @@
+# This is meant for local development only. Do not use this in production.
+version: '3.8'
+services:
+  postgres:
+    container_name: messaging-app-postgres
+    image: postgres
+    hostname: localhost
+    ports:
+      - "5470:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: messaging_app
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
