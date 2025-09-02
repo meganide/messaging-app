@@ -18,6 +18,7 @@ export const createContext = ({
         
         return {
           id: payload.userId,
+          name: payload.name,
           email: payload.email,
         };
       } catch (error) {

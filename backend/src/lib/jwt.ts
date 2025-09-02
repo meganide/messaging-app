@@ -5,6 +5,7 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d' as const;
 
 export type JwtPayload = {
   userId: number;
+  name: string;
   email: string;
 };
 

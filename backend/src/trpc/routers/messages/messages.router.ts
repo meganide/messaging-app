@@ -1,20 +1,15 @@
-import z from "zod";
-import { protectedProcedure, publicProcedure, router } from "../../trpc";
-import { db } from "../../../db";
-import { usersTable } from "../../../db/schema";
+import { protectedProcedure,  router } from "../../trpc";
+import { listMessagesByThreadIdSchema, sendMessageSchema } from "./messages.types";
+import { messageService } from "./service/message.service";
 
 export const messageRouter = router({
-    list: protectedProcedure.query(() => {
-        return { message: "hello" }
+    send: protectedProcedure.input(sendMessageSchema)
+    .mutation(async ({ input, ctx }) => {
+        return await messageService.send(input, ctx.user.id);
     }),
-    create: publicProcedure.input(z.object({
-        name: z.string(),
-        age: z.number(),
-        email: z.string().email(),
-        password: z.string(),
-    })).mutation(async ({ input }) => {
-        const { name, age, email, password } = input;
-        await db.insert(usersTable).values({ name, age, email, password });
+    listByThreadId: protectedProcedure.input(listMessagesByThreadIdSchema)
+    .query(async ({ input }) => {
+        return await messageService.listByThreadId(input);
     }),
 });
   

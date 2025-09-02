@@ -18,6 +18,7 @@ class AuthService {
 
         const jwtPayload: JwtPayload = {
             userId: user[0].id,
+            name: user[0].name,
             email: user[0].email,
         };
 
