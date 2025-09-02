@@ -1,6 +1,7 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { appRouter } from './trpc/router';
 import { createContext } from './trpc/trpc';
 
@@ -13,6 +14,8 @@ function startServer() {
     origin: 'http://localhost:3000',
     credentials: true,
   }));
+  
+  app.use(cookieParser());
 
   app.use(
     '/trpc',
@@ -22,7 +25,6 @@ function startServer() {
     }),
   );
   
-
   app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
   });

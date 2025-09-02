@@ -1,10 +1,10 @@
 import z from "zod";
-import { publicProcedure, router } from "../trpc";
-import { db } from "../../db";
-import { usersTable } from "../../db/schema";
+import { protectedProcedure, publicProcedure, router } from "../../trpc";
+import { db } from "../../../db";
+import { usersTable } from "../../../db/schema";
 
 export const messageRouter = router({
-    list: publicProcedure.query(() => {
+    list: protectedProcedure.query(() => {
         return { message: "hello" }
     }),
     create: publicProcedure.input(z.object({
