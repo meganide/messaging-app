@@ -1,20 +1,10 @@
-"use client"
+import { RequireAuth } from "@/components/require-auth";
 
-import { Button } from "@/components/ui/button";
-import { useTRPC } from "@/lib/trpc";
-import { useMutation, useQuery } from "@tanstack/react-query";
-
-export default function Home() {
-  const trpc = useTRPC();
-
-  const { data,isLoading } = useQuery(trpc.message.list.queryOptions())
-
-  const { mutate: createUser } = useMutation(trpc.message.create.mutationOptions())
-
-  return (
-    <section>
-      <p>{isLoading ? "Loading..." : data?.message}</p>
-      <Button onClick={() => createUser({ name: "John", age: 20, email: "john2@example.com", password: "123456" })}>Create User</Button>
+export default function Home() {return (
+    <section className="flex flex-col items-center justify-center h-screen">
+      <RequireAuth>
+        <p>Authenticated</p>
+      </RequireAuth>
     </section>
   );
 }

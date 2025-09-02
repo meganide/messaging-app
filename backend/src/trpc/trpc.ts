@@ -1,17 +1,28 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { initTRPC } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
+import { verifyToken, JWT_COOKIE_NAME } from '../lib/jwt';
 
 export const createContext = ({
     req,
     res,
   }: trpcExpress.CreateExpressContextOptions) => {
     const getUser = () => {
-      if (req.headers.authorization !== 'secret') {
+      try {
+        const token = req.cookies?.[JWT_COOKIE_NAME];
+        
+        if (!token) {
+          return null;
+        }
+        
+        const payload = verifyToken(token);
+        
+        return {
+          id: payload.userId,
+          email: payload.email,
+        };
+      } catch (error) {
         return null;
       }
-      return {
-        name: 'alex',
-      };
     };
   
     return {
@@ -35,6 +46,22 @@ const t = initTRPC.context<Context>().create();
  */
 export const router = t.router;
 export const publicProcedure = t.procedure;
+
+/**
+ * Protected procedure that requires authentication
+ */
+export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Unauthorized' });
+  }
+
+  return next({
+    ctx: {
+      ...ctx,
+      user: ctx.user, // user is now guaranteed to be defined
+    },
+  });
+});
 
 
 
