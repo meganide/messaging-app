@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useAuth } from "@/hooks/use-auth";
 import { Login } from "@/app/_components/login";
@@ -9,16 +9,11 @@ type RequireAuthProps = {
   fallback?: React.ReactNode;
 };
 
-export function RequireAuth({ 
-  children, 
-  fallback,
-}: RequireAuthProps) {
+export function RequireAuth({ children, fallback }: RequireAuthProps) {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <Loader2 className="animate-spin" />
-    );
+    return <Loader2 className="animate-spin" />;
   }
 
   if (!isAuthenticated) {
@@ -29,5 +24,5 @@ export function RequireAuth({
     );
   }
 
-  return children
+  return children;
 }

@@ -1,35 +1,36 @@
-import * as trpcExpress from '@trpc/server/adapters/express';
-import { initTRPC, TRPCError } from '@trpc/server';
-import { verifyToken, JWT_COOKIE_NAME } from '../lib/jwt';
+import * as trpcExpress from "@trpc/server/adapters/express";
+import { initTRPC, TRPCError } from "@trpc/server";
+import { verifyToken, JWT_COOKIE_NAME } from "../lib/jwt";
 
 export const createContext = ({
-    req,
-    res,
-  }: trpcExpress.CreateExpressContextOptions) => {
-    const getUser = () => {
-      try {
-        const token = req.cookies?.[JWT_COOKIE_NAME];
-        
-        if (!token) {
-          return null;
-        }
-        
-        const payload = verifyToken(token);
-        
-        return {
-          id: payload.userId,
-          email: payload.email,
-        };
-      } catch (error) {
+  req,
+  res,
+}: trpcExpress.CreateExpressContextOptions) => {
+  const getUser = () => {
+    try {
+      const token = req.cookies?.[JWT_COOKIE_NAME];
+
+      if (!token) {
         return null;
       }
-    };
-  
-    return {
-      req,
-      res,
-      user: getUser(),
-    };
+
+      const payload = verifyToken(token);
+
+      return {
+        id: payload.userId,
+        name: payload.name,
+        email: payload.email,
+      };
+    } catch (error) {
+      return null;
+    }
+  };
+
+  return {
+    req,
+    res,
+    user: getUser(),
+  };
 };
 
 export type Context = Awaited<ReturnType<typeof createContext>>;
@@ -52,7 +53,7 @@ export const publicProcedure = t.procedure;
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   if (!ctx.user) {
-    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Unauthorized' });
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Unauthorized" });
   }
 
   return next({
@@ -62,6 +63,3 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     },
   });
 });
-
-
-
