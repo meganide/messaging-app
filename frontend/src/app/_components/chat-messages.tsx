@@ -28,7 +28,7 @@ export function ChatMessages() {
         <p
           className={cn(
             "w-fit bg-zinc-700 p-2 rounded-md",
-            isOwnMessage(message.senderId) ? "self-start" : "self-end"
+            isOwnMessage(message.senderId) ? "self-end" : "self-start"
           )}
           key={message.id}
         >

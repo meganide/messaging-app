@@ -11,7 +11,7 @@ export function NewThread() {
   return (
     <header className="flex flex-row gap-2">
       <Input
-        placeholder="Search username"
+        placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
