@@ -10,11 +10,17 @@ export function ChatMessages() {
 
   if (!threadId) {
     return (
-      <article className="flex flex-col gap-2 h-full overflow-y-auto">
-        <p className="text-gray-500 text-center py-4">
-          Select a thread to start chatting
-        </p>
-      </article>
+      <p className="text-zinc-300 text-center py-4">
+        Select a thread to start chatting
+      </p>
+    );
+  }
+
+  if (messages?.length === 0) {
+    return (
+      <p className="text-zinc-300 text-center py-4">
+        Write a message to start chatting
+      </p>
     );
   }
 

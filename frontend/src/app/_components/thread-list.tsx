@@ -3,9 +3,11 @@
 import { Loader2 } from "lucide-react";
 import { useThreads } from "../_hooks/use-threads";
 import { useThreadStore } from "@/stores/thread-store";
+import { cn } from "@/lib/utils";
 
 export function ThreadList() {
   const { data: threads, isPending } = useThreads();
+  const threadId = useThreadStore((state) => state.threadId);
   const setThreadId = useThreadStore((state) => state.setThreadId);
 
   if (isPending) {
@@ -25,10 +27,13 @@ export function ThreadList() {
       {threads.map((thread) => (
         <article
           key={thread.id}
-          className="bg-zinc-700 p-2 rounded-md py-3 cursor-pointer hover:bg-zinc-600 transition-colors"
+          className={cn(
+            "bg-zinc-700 p-2 rounded-md py-3 cursor-pointer hover:bg-zinc-600 transition-colors",
+            threadId === thread.id && "bg-zinc-300 text-zinc-900"
+          )}
           onClick={() => setThreadId(thread.id)}
         >
-          <p className="text-sm text-gray-300 mb-1">
+          <p className="text-sm mb-1">
             {thread.participants.length > 1 ? "Group chat" : "Direct message"}
           </p>
           <p className="font-medium">
