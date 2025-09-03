@@ -16,7 +16,16 @@ class MessageService {
   }
 
   public async listThreads(userId: number) {
-    return await messageRepository.listThreads(userId);
+    const threads = await messageRepository.listThreads(userId);
+
+    const threadsWithoutOwnUserId = threads.map((thread) => {
+      thread.participants = thread.participants.filter(
+        (participant) => participant.user.id !== userId
+      );
+      return thread;
+    });
+
+    return threadsWithoutOwnUserId;
   }
 
   public async createNewThread(input: CreateNewThreadInput, userId: number) {

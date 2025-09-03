@@ -1,9 +1,16 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import { useThreads } from "../_hooks/use-threads";
+import { useThreadStore } from "@/stores/thread-store";
 
 export function ThreadList() {
-  const { data: threads } = useThreads();
+  const { data: threads, isPending } = useThreads();
+  const setThreadId = useThreadStore((state) => state.setThreadId);
+
+  if (isPending) {
+    return <Loader2 className="animate-spin" />;
+  }
 
   if (!threads || threads.length === 0) {
     return (
@@ -19,6 +26,7 @@ export function ThreadList() {
         <article
           key={thread.id}
           className="bg-zinc-700 p-2 rounded-md py-3 cursor-pointer hover:bg-zinc-600 transition-colors"
+          onClick={() => setThreadId(thread.id)}
         >
           <p className="text-sm text-gray-300 mb-1">
             {thread.participants.length > 1 ? "Group chat" : "Direct message"}

@@ -4,13 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSendMessage } from "../_hooks/use-send-message";
 
-type ChatFooterProps = {
-  threadId: number;
-};
-
-export function ChatFooter({ threadId }: ChatFooterProps) {
+export function ChatFooter() {
   const { message, setMessage, sendMessage, sendMessageMutation } =
-    useSendMessage(threadId);
+    useSendMessage();
 
   return (
     <footer className="flex flex-row gap-2">
