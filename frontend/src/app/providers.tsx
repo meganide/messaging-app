@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createTRPCClient, httpBatchLink, httpSubscriptionLink, splitLink } from '@trpc/client';
-import { useState } from 'react';
-import { AppRouter } from '../../../backend/src/trpc/router';
-import { TRPCProvider } from '@/lib/trpc';
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpSubscriptionLink,
+  splitLink,
+} from "@trpc/client";
+import { useState } from "react";
+import { AppRouter } from "../../../backend/src/trpc/router";
+import { TRPCProvider } from "@/lib/trpc";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -15,14 +21,19 @@ function makeQueryClient() {
         // above 0 to avoid refetching immediately on the client
         staleTime: 60 * 1000,
         retry: 1,
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+      },
+      mutations: {
+        onError(error) {
+          toast.error(error.message);
+        },
       },
     },
   });
 }
 let browserQueryClient: QueryClient | undefined = undefined;
 function getQueryClient() {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Server: always make a new query client
     return makeQueryClient();
   } else {
@@ -35,10 +46,9 @@ function getQueryClient() {
   }
 }
 
-
 type ProvidersProps = {
   children: React.ReactNode;
-}
+};
 
 export function Providers({ children }: ProvidersProps) {
   const queryClient = getQueryClient();
@@ -46,29 +56,29 @@ export function Providers({ children }: ProvidersProps) {
     createTRPCClient<AppRouter>({
       links: [
         splitLink({
-          condition: (op) => op.type === 'subscription',
+          condition: (op) => op.type === "subscription",
           true: httpSubscriptionLink({
-            url: () => 'http://localhost:8000/trpc',
+            url: () => "http://localhost:8000/trpc",
           }),
           false: httpBatchLink({
-            url: 'http://localhost:8000/trpc',
+            url: "http://localhost:8000/trpc",
             fetch(url, options) {
               return fetch(url, {
                 ...options,
-                credentials: 'include', // This ensures cookies are sent with requests
+                credentials: "include", // This ensures cookies are sent with requests
               });
             },
           }),
-        })
-
+        }),
       ],
-    }),
+    })
   );
 
   return (
     <QueryClientProvider client={queryClient}>
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
         {children}
+        <Toaster richColors position="top-center" />
       </TRPCProvider>
     </QueryClientProvider>
   );

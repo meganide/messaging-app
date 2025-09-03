@@ -1,39 +1,39 @@
-import 'dotenv/config';
-import { usersTable } from './schema';
-import { db } from '.';
-  
+import "dotenv/config";
+import { usersTable } from "./schema";
+import { db } from ".";
+
 type User = typeof usersTable.$inferInsert;
 
 const users: User[] = [
   {
-    name: 'John',
+    name: "John",
     age: 30,
-    email: 'john@example.com',
-    password: '123456',
+    email: "john@example.com",
+    password: "123456",
   },
   {
-    name: 'Jane',
+    name: "Jane",
     age: 25,
-    email: 'jane@example.com',
-    password: '123456',
+    email: "jane@example.com",
+    password: "123456",
   },
   {
-    name: 'Jim',
+    name: "Jim",
     age: 35,
-    email: 'jim@example.com',
-    password: '123456',
+    email: "jim@example.com",
+    password: "123456",
   },
   {
-    name: 'Jill',
+    name: "Jill",
     age: 28,
-    email: 'jill@example.com',
-    password: '123456',
+    email: "jill@example.com",
+    password: "123456",
   },
   {
-    name: 'Jack',
+    name: "Jack",
     age: 32,
-    email: 'jack@example.com',
-    password: '123456',
+    email: "jack@example.com",
+    password: "123456",
   },
 ] as const;
 
@@ -42,4 +42,3 @@ async function seedDatabase() {
 }
 
 seedDatabase();
-

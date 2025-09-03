@@ -1,4 +1,10 @@
-import { integer, pgTable, varchar, timestamp, text } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  varchar,
+  timestamp,
+  text,
+} from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 export const usersTable = pgTable("users", {
@@ -17,15 +23,23 @@ export const threadsTable = pgTable("threads", {
 
 export const threadParticipantsTable = pgTable("thread_participants", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  threadId: integer().notNull().references(() => threadsTable.id, { onDelete: 'cascade' }),
-  userId: integer().notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
+  threadId: integer()
+    .notNull()
+    .references(() => threadsTable.id, { onDelete: "cascade" }),
+  userId: integer()
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
   joinedAt: timestamp().defaultNow().notNull(),
 });
 
 export const messagesTable = pgTable("messages", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  threadId: integer().notNull().references(() => threadsTable.id, { onDelete: 'cascade' }),
-  senderId: integer().notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
+  threadId: integer()
+    .notNull()
+    .references(() => threadsTable.id, { onDelete: "cascade" }),
+  senderId: integer()
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
   content: text().notNull(),
   createdAt: timestamp().defaultNow().notNull(),
 });
@@ -41,16 +55,19 @@ export const threadsRelations = relations(threadsTable, ({ many }) => ({
   messages: many(messagesTable),
 }));
 
-export const threadParticipantsRelations = relations(threadParticipantsTable, ({ one }) => ({
-  thread: one(threadsTable, {
-    fields: [threadParticipantsTable.threadId],
-    references: [threadsTable.id],
-  }),
-  user: one(usersTable, {
-    fields: [threadParticipantsTable.userId],
-    references: [usersTable.id],
-  }),
-}));
+export const threadParticipantsRelations = relations(
+  threadParticipantsTable,
+  ({ one }) => ({
+    thread: one(threadsTable, {
+      fields: [threadParticipantsTable.threadId],
+      references: [threadsTable.id],
+    }),
+    user: one(usersTable, {
+      fields: [threadParticipantsTable.userId],
+      references: [usersTable.id],
+    }),
+  })
+);
 
 export const messagesRelations = relations(messagesTable, ({ one }) => ({
   thread: one(threadsTable, {

@@ -3,8 +3,8 @@ import { messageRouter } from "./routers/messages/messages.router";
 import { authRouter } from "./routers/auth/auth.router";
 
 export const appRouter = router({
-    message: messageRouter,
-    auth: authRouter,
-  });
-  
+  auth: authRouter,
+  message: messageRouter,
+});
+
 export type AppRouter = typeof appRouter;
