@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { asc, desc, eq, inArray } from "drizzle-orm";
 import { db } from "../../../../db";
 import {
   messagesTable,
@@ -28,7 +28,8 @@ class MessageRepository {
     return await db
       .select()
       .from(messagesTable)
-      .where(eq(messagesTable.threadId, input.threadId));
+      .where(eq(messagesTable.threadId, input.threadId))
+      .orderBy(asc(messagesTable.createdAt));
   }
 
   public async listThreads(userId: number) {
