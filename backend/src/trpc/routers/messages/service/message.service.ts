@@ -1,3 +1,4 @@
+import EventEmitter from "events";
 import { userService } from "../../user/service/user.service";
 import {
   CreateNewThreadInput,
@@ -6,9 +7,22 @@ import {
 } from "../messages.types";
 import { messageRepository } from "../repository/message.repository";
 
+export const messageEventEmitter = new EventEmitter();
+
 class MessageService {
   public async send(input: SendMessageInput, userId: number) {
-    return await messageRepository.saveMessage(input, userId);
+    const optimisticMessage = {
+      id: Date.now(), // temporary ID until DB save
+      content: input.content,
+      threadId: input.threadId,
+      senderId: userId,
+      createdAt: new Date(),
+    };
+
+    messageEventEmitter.emit("newMessage", optimisticMessage);
+    void messageRepository.saveMessage(input, userId);
+
+    return optimisticMessage;
   }
 
   public async listByThreadId(input: ListMessagesByThreadIdInput) {

@@ -6,8 +6,13 @@ import { useSendMessage } from "../_hooks/use-send-message";
 import { useThreadStore } from "@/stores/thread-store";
 
 export function ChatFooter() {
-  const { message, setMessage, sendMessage, sendMessageMutation } =
-    useSendMessage();
+  const {
+    message,
+    setMessage,
+    sendMessage,
+    sendMessageMutation,
+    handleKeyPress,
+  } = useSendMessage();
   const threadId = useThreadStore((state) => state.threadId);
 
   return (
@@ -16,13 +21,14 @@ export function ChatFooter() {
         placeholder="Type your message"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyPress}
         disabled={!threadId}
       />
       <Button
-        disabled={sendMessageMutation.isPending || !threadId}
+        disabled={sendMessageMutation.isPending || !threadId || !message.trim()}
         onClick={sendMessage}
       >
-        {sendMessageMutation.isPending ? "Sending..." : "Send"}
+        Send
       </Button>
     </footer>
   );

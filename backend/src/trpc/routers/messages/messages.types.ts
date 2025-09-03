@@ -25,3 +25,9 @@ export const createNewThreadSchema = z.object({
 });
 
 export type CreateNewThreadInput = z.infer<typeof createNewThreadSchema>;
+
+export const onNewMessageSchema = z.object({
+  threadId: z.number(),
+});
+
+export type OnNewMessageInput = z.infer<typeof onNewMessageSchema>;

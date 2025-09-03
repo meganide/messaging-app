@@ -58,7 +58,10 @@ export function Providers({ children }: ProvidersProps) {
         splitLink({
           condition: (op) => op.type === "subscription",
           true: httpSubscriptionLink({
-            url: () => "http://localhost:8000/trpc",
+            url: "http://localhost:8000/trpc",
+            eventSourceOptions: () => ({
+              withCredentials: true,
+            }),
           }),
           false: httpBatchLink({
             url: "http://localhost:8000/trpc",

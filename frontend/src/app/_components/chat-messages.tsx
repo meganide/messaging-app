@@ -1,5 +1,6 @@
 import { useThreadStore } from "@/stores/thread-store";
 import { useMessages } from "../_hooks/use-messages";
+import { useMessageSubscription } from "../_hooks/use-message-subscription";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
@@ -7,6 +8,8 @@ export function ChatMessages() {
   const threadId = useThreadStore((state) => state.threadId);
   const { user } = useAuth();
   const { data: messages } = useMessages();
+
+  useMessageSubscription();
 
   if (!threadId) {
     return (
