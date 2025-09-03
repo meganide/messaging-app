@@ -1,4 +1,4 @@
-import { on } from "events";
+import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "../../trpc";
 import {
   createNewThreadSchema,
@@ -6,9 +6,7 @@ import {
   onNewMessageSchema,
   sendMessageSchema,
 } from "./messages.types";
-import { messageService, messageEventEmitter } from "./service/message.service";
-import { tracked } from "@trpc/server";
-import { z } from "zod";
+import { messageService } from "./service/message.service";
 
 export const messageRouter = router({
   send: protectedProcedure
@@ -32,27 +30,12 @@ export const messageRouter = router({
   onNewMessage: protectedProcedure
     .input(onNewMessageSchema)
     .subscription(async function* (opts) {
-      const { threadId } = opts.input;
-      const userId = opts.ctx.user.id;
-
-      const threads = await messageService.listThreads(userId);
-
-      try {
-        for await (const [eventData] of on(messageEventEmitter, "newMessage", {
-          signal: opts.signal,
-        })) {
-          const message = eventData as any;
-
-          if (message.threadId === threadId) {
-            yield tracked(message.id.toString(), {
-              ...message,
-              type: "message",
-            });
-          }
-        }
-      } catch (error) {
-        console.error("Subscription error:", error);
-        throw error;
+      if (!opts.signal) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Signal is required for subscription",
+        });
       }
+      yield* messageService.subscribeToNewMessages(opts.input, opts.signal);
     }),
 });
